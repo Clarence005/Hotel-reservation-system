@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" href="static/user/Signin.css" type = "text/css">
+    <title>Rescue operation</title>
+</head>
+<body>
+    <h2 id = "rescue">Welcome to Hotel</h2>
+    <form class = "Signin" method = "post" action = "{{url_for('ow_signin_form')}}">
+        <div>
+            <label for = "userid" id = user>User Id</label>
+            <input name="userid" placeholder="Enter the User id" id = "id"  required></input>
+        </div>
+        <div>
+            <label for = "psw" id = "password">Password</label>
+            <input type = "password" placeholder = "Enter the password" name="pass" id = "pass_word"   minlength = "6" required></input>
+        </div>
+        <div>
+            <button type = "Submit" id = "login" name = "button_clicked" value = "btn1">Log in</button>
+            <button type = "reset" id = "reset">reset</button>
+        </div>
+        <div class = "inline">
+            <p>Don't have an account? <a  id = "page" name = "link_clicked" value = "link1" href="{{ url_for('ow_get_signup_page')}}">Sign up</a></p>
+            <p>{{ error_message }}</p>
+        </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<header>
+    <h1>History</h1>
+    </header>
+    <link rel="stylesheet" href="static/user/ord_log.css">
+    
+    <div class = "container">
+    <table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Table Type</th>
+            <th>Table No</th>
+            <th>Date</th>
+            <th>Timing</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cell in results %}
+        <tr>
+            <td>{{ cell[0] }}</td>
+            <td>{{ cell[1] }}</td>
+            <td>{{ cell[2] }}</td>
+            <td>{{ cell[3] }}</td>
+            <td>{{ cell[4] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    </div>
+    <br><br>
+    

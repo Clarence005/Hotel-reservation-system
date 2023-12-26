@@ -1,0 +1,32 @@
+<header>
+    <h1>Payment</h1>
+    <link rel="stylesheet" href="static/user/payment.css">
+</header>
+<div class = "container">
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Table Type</th>
+            <th>Table No</th>
+            <th>Timing</th>
+            <th>Date</th>
+            <th>Price</th>
+            <th>Discount</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cell in results %}
+        <td>{{ cell }}</td>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+
+    <form method = "post" action = "{{url_for('direct_page')}}">
+        <button  class = "fancy-button" type = "submit" name = "button_clicked" value = "btn1">Proceed to Pay</button>
+    </form>
+    
+    <br><br>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Table</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #333;
+        color: white;
+    }
+
+    .reservation-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        margin-bottom: 8px;
+    }
+
+    input {
+        padding: 8px;
+        margin-bottom: 16px;
+    }
+
+    button {
+        padding: 10px;
+        background-color: #333;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #555;
+    }
+
+    #tableType {
+        width: 150px;
+        height:2em; /* Adjust the width as needed */
+    }
+    #timing {
+        width: 150px;
+        height: 2em; /* Adjust the width as needed */
+    }
+</style>
+<body>
+    <header>
+        <h1>Table Reservation System</h1>
+    </header>
+
+    <div class="container" id="tableContainer">
+        <table>
+            <thead>
+                <tr>
+                    <th>Table Type</th>
+                    <th>Table no</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+        <tbody id="reservationTableBody">
+            <!-- Table content will be dynamically added here -->
+        </tbody>
+    </table>
+    <form method = "post" action = "{{url_for('book_form')}}">
+    <div class="reservation-form">
+        <h2>Make a Reservation</h2>
+        <label for="tableType">Table Type:</label>
+        <select id="tableType" name="types" required>
+            <option value="family">Family Table</option>
+            <option value="party">Party Table</option>
+            <option value="couple">Couple Table</option>
+        </select>
+
+        <label for="timing">Select Timing:</label>
+        <select id="timing" onchange="updateTable()" name="timings" required>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner">Dinner</option>
+        </select>
+    <label for="date">Select Date:</label>
+    <input type="date" id="date" onchange="updateTable()" name="date" required>
+    <label for="tableId">Table No:</label>
+            <input type="text" id="tableId" placeholder="Enter Table Number" name="table_no" required>
+
+            <label for="customerName">User ID:</label>
+            <input type="text" id="customerName" placeholder="Enter Your ID" name="id" required>
+
+            <button name="button_clicked" value="btn1">Reserve Table</button>
+        </div>
+    </form>
+    </div>
+    <script>
+        // Function to fetch JSON data from Flask route
+        async function fetchJsonData() {
+            try {
+                const response = await fetch('/get_data');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching JSON data:', error);
+                return [];
+            }
+        }
+
+        // Function to update the table based on selected timing and date
+        async function updateTable() {
+            var jsonData = await fetchJsonData();
+
+            var timing = document.getElementById("timing").value;
+            var inputDate = new Date(document.getElementById("date").value);
+            var formattedDate = (inputDate.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                                (inputDate.getDate()).toString().padStart(2, '0') + '-' +
+                                inputDate.getFullYear();
+
+            // Filter data based on timing and formatted date
+            var filteredData = jsonData.filter(function(entry) {
+                return entry.timing === timing && entry.date === formattedDate;
+            });
+
+            // Update table content
+            var tableBody = document.getElementById("reservationTableBody");
+            tableBody.innerHTML = "";
+
+            filteredData.forEach(function(entry) {
+                entry.table_type.forEach(function(type, index) {
+                    var row = tableBody.insertRow();
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+
+                    cell1.textContent = type;
+                    cell2.textContent = entry.table_number[index].join(", ");
+
+                    // Set common prices based on table type
+                    switch (type.toUpperCase()) {
+                        case 'FAMILY':
+                            cell3.textContent = 'Rs.200';
+                            break;
+                        case 'COUPLE':
+                            cell3.textContent = 'Rs.100';
+                            break;
+                        case 'PARTY':
+                            cell3.textContent = 'Rs.800';
+                            break;
+                        default:
+                            cell3.textContent = 'N/A';
+                            break;
+                    }
+                });
+            });
+        }
+
+        // Initial table update
+        updateTable();
+    </script>
+</body>
+</html>
